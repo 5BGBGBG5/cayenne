@@ -16,7 +16,7 @@ interface TokenResponse {
 
 /**
  * Build the Reddit OAuth2 authorization URL.
- * Scopes: read (organic), identity, ads (Reddit Ads API read+write)
+ * Scopes: read (organic), identity, adsread + adsedit (Reddit Ads API)
  */
 export function getAuthUrl(state: string): string {
   const params = new URLSearchParams({
@@ -25,7 +25,7 @@ export function getAuthUrl(state: string): string {
     state,
     redirect_uri: REDDIT_REDIRECT_URI,
     duration: 'permanent',
-    scope: 'read identity ads',
+    scope: 'read identity adsread adsedit',
   });
   return `https://www.reddit.com/api/v1/authorize?${params.toString()}`;
 }
