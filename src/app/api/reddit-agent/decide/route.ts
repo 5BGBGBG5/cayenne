@@ -190,25 +190,36 @@ async function handleAdDecision(
       throw new Error((createResult.error as string) || 'Campaign creation failed');
     }
 
-    await emitSignal('reddit_ad_created', {
-      campaignId: createResult.campaignId,
-      redditCampaignId: createResult.redditCampaignId,
-      sourceSignal: detail.source_signal_type,
-    });
+    // Emit signal only if the campaign was actually created on Reddit
+    if (createResult.redditApiAvailable) {
+      await emitSignal('reddit_ad_created', {
+        campaignId: createResult.campaignId,
+        redditCampaignId: createResult.redditCampaignId,
+        sourceSignal: detail.source_signal_type,
+      });
+    }
 
     return NextResponse.json({
       success: true,
       action_type: 'ad_recommendation',
       status: 'approved',
       campaignId: createResult.campaignId,
-      redditCampaignId: createResult.redditCampaignId,
+      redditCampaignId: createResult.redditCampaignId || null,
+      redditApiAvailable: createResult.redditApiAvailable,
+      message: createResult.message,
     });
   } catch (err) {
     const message = err instanceof Error ? err.message : 'Unknown error';
 
+    // Revert decision queue to pending so user can retry
+    await supabase
+      .from('reddit_agent_decision_queue')
+      .update({ status: 'pending', reviewed_by: null, reviewed_at: null })
+      .eq('id', decision.id as string);
+
     await supabase.from('reddit_agent_change_log').insert({
       action_type: 'ad_creation_failed',
-      action_detail: `Failed to create ad for: ${decision.action_summary}`,
+      action_detail: `Failed to process ad approval: ${decision.action_summary}`,
       data_used: { error: message, detail },
       reason: message,
       outcome: 'rejected',
