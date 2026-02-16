@@ -99,6 +99,42 @@ export async function computeTrends(period: 'daily' | 'weekly' = 'daily'): Promi
     });
   }
 
+  // Pain point cluster detection (always 7-day window)
+  const weekSince = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString();
+  const weekPosts = lookback >= 7
+    ? (recentPosts || [])
+    : (await supabase
+        .from('reddit_agent_scanned_posts')
+        .select('subreddit, layer1_keywords_matched')
+        .gte('scanned_at', weekSince)
+      ).data || [];
+
+  const kwPostCount: Record<string, { count: number; subreddits: Set<string>; coKeywords: Set<string> }> = {};
+  for (const post of weekPosts) {
+    const kws = post.layer1_keywords_matched || [];
+    for (const kw of kws) {
+      if (!kwPostCount[kw]) {
+        kwPostCount[kw] = { count: 0, subreddits: new Set(), coKeywords: new Set() };
+      }
+      kwPostCount[kw].count++;
+      kwPostCount[kw].subreddits.add(post.subreddit);
+      for (const other of kws) {
+        if (other !== kw) kwPostCount[kw].coKeywords.add(other);
+      }
+    }
+  }
+
+  for (const [painPoint, data] of Object.entries(kwPostCount)) {
+    if (data.count >= 3) {
+      await emitSignal('reddit_pain_point_cluster', {
+        painPoint,
+        frequency: data.count,
+        relatedKeywords: [...data.coKeywords],
+        subreddits: [...data.subreddits],
+      });
+    }
+  }
+
   // Store snapshot
   const today = new Date().toISOString().split('T')[0];
   await supabase.from('reddit_agent_trend_snapshots').insert({
