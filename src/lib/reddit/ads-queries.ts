@@ -6,7 +6,7 @@ import type { RedditAdCampaign, RedditAdReport } from './types';
  * We need this for all campaign operations.
  */
 export async function getAdsAccountId(): Promise<string> {
-  const data = await adsGet<{ data: Array<{ id: string }> }>('/me/accounts');
+  const data = await adsGet<{ data: Array<{ id: string }> }>('/accounts');
   if (!data.data?.length) {
     throw new Error('No Reddit Ads accounts found for this user');
   }
@@ -47,8 +47,9 @@ export async function getCampaignReport(
   endDate: string
 ): Promise<RedditAdReport[]> {
   const data = await adsGet<{ data: RedditAdReport[] }>(
-    `/accounts/${accountId}/campaigns/${campaignId}/report`,
+    `/accounts/${accountId}/reports`,
     {
+      campaign_id: campaignId,
       starts_at: startDate,
       ends_at: endDate,
       group_by: 'date',
@@ -66,7 +67,7 @@ export async function getAccountReport(
   endDate: string
 ): Promise<RedditAdReport[]> {
   const data = await adsGet<{ data: RedditAdReport[] }>(
-    `/accounts/${accountId}/report`,
+    `/accounts/${accountId}/reports`,
     {
       starts_at: startDate,
       ends_at: endDate,

@@ -66,8 +66,9 @@ export async function createAdGroup(input: CreateAdGroupInput): Promise<{ id: st
   }
 
   const data = await adsPost<{ data: { id: string } }>(
-    `/accounts/${input.accountId}/campaigns/${input.campaignId}/adgroups`,
+    `/accounts/${input.accountId}/ad_groups`,
     {
+      campaign_id: input.campaignId,
       name: input.name,
       bid_strategy: 'CPC',
       bid_cents: input.bidCents,
@@ -83,8 +84,9 @@ export async function createAdGroup(input: CreateAdGroupInput): Promise<{ id: st
  */
 export async function createAd(input: CreateAdInput): Promise<{ id: string }> {
   const data = await adsPost<{ data: { id: string } }>(
-    `/accounts/${input.accountId}/adgroups/${input.adGroupId}/ads`,
+    `/accounts/${input.accountId}/ads`,
     {
+      ad_group_id: input.adGroupId,
       headline: input.headline,
       body: input.body,
       cta: input.cta,
