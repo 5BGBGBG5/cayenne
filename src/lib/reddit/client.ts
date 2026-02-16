@@ -2,7 +2,7 @@ import { getAccessToken } from './auth';
 
 const USER_AGENT = 'web:cayenne-salt:v1.0 (by /u/inecta_salt)';
 const REDDIT_DATA_BASE = 'https://oauth.reddit.com';
-const REDDIT_ADS_BASE = 'https://ads-api.reddit.com/api/v3';
+const REDDIT_ADS_BASE = 'https://ads-api.reddit.com/api/v2.0';
 
 // ============================================================================
 // Shared rate limiter — 60 requests/minute budget
