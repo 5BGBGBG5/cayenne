@@ -1109,7 +1109,8 @@ export default function DashboardPage() {
       const { count } = await supabase
         .from('reddit_agent_decision_queue')
         .select('id', { count: 'exact', head: true })
-        .eq('status', 'pending');
+        .eq('status', 'pending')
+        .eq('action_type', 'draft_response');
       setPendingCount(count || 0);
     }
     loadBadges();
