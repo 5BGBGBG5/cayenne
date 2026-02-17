@@ -94,7 +94,16 @@ Cayenne writes to `shared_agent_signals` with `source_agent: 'cayenne'`:
 | `reddit_ad_recommended` | Ad recommendation generated |
 | `reddit_ad_performance` | Campaign performance update |
 | `reddit_ad_created` | Campaign created via Reddit Ads API |
+| `reddit_pain_point_cluster` | Same pain point keyword appears in 3+ posts within 7 days. Payload: `{ painPoint, frequency, relatedKeywords, subreddits }` |
 | `reddit_ad_auto_paused` | Campaign auto-paused by CPC guardrail |
+
+### Consumes
+
+Cayenne polls `shared_agent_signals` for signals from other agents:
+
+| Event Type | From | Purpose |
+|---|---|---|
+| `trending_search_term` | Saffron | Prioritize Reddit scanning around high-converting search terms |
 
 ## Key Commands
 
@@ -120,7 +129,7 @@ CRON_SECRET=                        # Vercel cron auth token
 
 ## Conventions
 
-- This agent is part of the SALT Crew network. See Saffron repo for shared patterns.
+- This agent is part of the SALT Crew network. See salt-crew-core/ARCHITECTURE.md for shared SALT Crew conventions.
 - Cayenne reads/writes to the same AiEO Supabase project as Saffron — no separate database.
 - All tables prefixed `reddit_agent_*`, always scoped by subreddit context.
 - `maxDuration = 120` on all API routes (Vercel Hobby plan ceiling).
