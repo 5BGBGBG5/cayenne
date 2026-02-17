@@ -1124,10 +1124,16 @@ export default function DashboardPage() {
           <h1 className="text-2xl font-bold text-[var(--text-primary)]">Cayenne</h1>
           <p className="text-sm text-[var(--text-secondary)]">Reddit Marketing Intelligence Agent</p>
         </div>
-        <div className="flex items-center gap-2">
+        <a
+          href="https://www.inecta-salt.com/"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="flex items-center gap-2 hover:opacity-80 transition-opacity"
+        >
           <div className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
           <span className="text-xs text-[var(--text-secondary)]">SALT Crew</span>
-        </div>
+          <ExternalLink size={12} className="text-[var(--text-secondary)]" />
+        </a>
       </div>
 
       {/* Tab Navigation */}
