@@ -7,7 +7,7 @@ import {
   Megaphone, FileText, Clock, Shield,
   ExternalLink, Copy, Check, AlertTriangle,
   Pause, Play, ChevronDown, ChevronUp, Eye,
-  RefreshCw,
+  RefreshCw, ArrowUpRight,
 } from 'lucide-react';
 import {
   BarChart, Bar, XAxis, YAxis, CartesianGrid,
@@ -1122,18 +1122,22 @@ export default function DashboardPage() {
       <div className="flex items-center justify-between mb-6">
         <div>
           <h1 className="text-2xl font-bold text-[var(--text-primary)]">Cayenne</h1>
-          <p className="text-sm text-[var(--text-secondary)]">Reddit Marketing Intelligence Agent</p>
+          <p className="text-sm text-[var(--text-secondary)]">
+            Reddit Marketing Intelligence Agent —{' '}
+            <a href="https://www.inecta-salt.com/" target="_blank" rel="noopener noreferrer"
+              className="inline-flex items-center gap-0.5 text-[var(--accent-primary)] hover:underline">
+              SALT Crew
+              <ArrowUpRight className="w-3 h-3" />
+            </a>
+          </p>
         </div>
-        <a
-          href="https://www.inecta-salt.com/"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="flex items-center gap-2 hover:opacity-80 transition-opacity"
-        >
-          <div className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-          <span className="text-xs text-[var(--text-secondary)]">SALT Crew</span>
-          <ExternalLink size={12} className="text-[var(--text-secondary)]" />
-        </a>
+        <div className="flex items-center gap-3">
+          <a href="/changelog"
+            className="flex items-center gap-1.5 px-3 py-2 text-sm font-medium rounded-lg text-[var(--text-secondary)] border border-[var(--border-primary)] hover:text-[var(--text-primary)] hover:border-[var(--accent-primary)]/30 transition-colors">
+            <FileText className="w-4 h-4" />
+            Changelog
+          </a>
+        </div>
       </div>
 
       {/* Tab Navigation */}
